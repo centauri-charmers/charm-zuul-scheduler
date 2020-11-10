@@ -1,0 +1,18 @@
+name: zuul-scheduler
+summary: Zuul Scheduler Service
+maintainer: Centauri Charmers <charmers@centauri.solutions>
+description: |
+  The scheduler is the primary component of Zuul. The scheduler is not a
+  scalable component; one, and only one, scheduler must be running at all
+  times for Zuul to be operational. It receives events from any connections
+  to remote systems which have been configured, enqueues items into
+  pipelines, distributes jobs to executors, and reports results.
+tags:
+  - app-server
+series:
+  - bionic
+subordinate: false
+provides: {}
+requires:
+  zookeeper:
+    interface: zookeeper

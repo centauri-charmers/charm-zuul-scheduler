@@ -1,0 +1,18 @@
+includes:
+  - layer:basic
+  - layer:apt
+  - interface:zookeeper
+
+options:
+  basic:
+    # We're installing a Pip package so we'll hit
+    # https://github.com/juju-solutions/layer-basic/issues/132
+    use_venv: True 
+    include_system_packages: False
+    # packages:
+    #   - python3-psycopg2
+  apt:
+    packages:
+      - libre2-dev
+      - python3-pip
+      - nginx

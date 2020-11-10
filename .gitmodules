@@ -1,0 +1,3 @@
+[submodule "interfaces/zookeeper"]
+	path = interfaces/zookeeper
+	url = https://github.com/omnivector-solutions/interface-zookeeper

@@ -1,0 +1,8 @@
+options:
+  tenant-config:
+    type: string
+    default:
+    description: |
+      URL to a file that contains a Zuul tenant-config. An example, using
+      OpenDev's config, would be:
+      https://github.com/openstack/project-config/raw/master/zuul/main.yaml

@@ -1,0 +1,21 @@
+series: bionic
+applications:
+  zuul-scheduler:
+    charm: ../../../zuul-scheduler
+    num_units: 1
+    options:
+      tenant-config: https://github.com/CentauriSolutions/zuul-config/raw/master/zuul/main.yaml
+      connections: |
+        - name: github
+          driver: github
+          arguments:
+            app_id: string
+    # options:
+      # tenant-config: https://github.com/openstack/project-config/raw/master/zuul/main.yaml
+  zookeeper:
+    # charm: cs:~omnivector/zookeeper
+    charm: cs:~chris.macnaughton/zookeeper
+    num_units: 3
+relations:
+  - - zuul-scheduler
+    - zookeeper
