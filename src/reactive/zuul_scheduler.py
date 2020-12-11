@@ -1,3 +1,4 @@
+import base64
 import os
 import subprocess
 import yaml
@@ -6,6 +7,7 @@ import charms.reactive as reactive
 import charms.reactive.relations as relations
 
 import charmhelpers.core as ch_core
+from charmhelpers.core.host import (mkdir, chmod)
 import charmhelpers.core.templating as templating
 import charmhelpers.core.hookenv as hookenv
 # from charmhelpers.core.hookenv import log
@@ -69,6 +71,17 @@ def reset_configured():
     reactive.clear_flag('zuul.configured')
 
 
+@reactive.when('zuul.user.created',
+               'config.set.ssh_key',)
+def configure_ssh_key():
+    key = base64.b64decode(hookenv.config().get('ssh_key', ''))
+    mkdir('/var/lib/zuul/.ssh/',  owner='zuul', group='zuul', perms=0o700)
+    with open('/var/lib/zuul/.ssh/id_rsa', 'wb') as fh:
+        fh.write(key)
+    chmod('/var/lib/zuul/.ssh/id_rsa', 0o600)
+
+
+
 @reactive.when('zuul.installed',
                'endpoint.zookeeper.available',
                'zuul.user.created')
@@ -77,12 +90,14 @@ def configure():
     zookeeper = relations.endpoint_from_flag('endpoint.zookeeper.available')
     connections = []
     try:
-         connections = yaml.safe_load(hookenv.config().get('connections', []))
+        connections_yaml = hookenv.config().get('connections')
+        if connections_yaml:
+            connections = yaml.safe_load(connections_yaml)
     except yaml.YAMLError:
         pass
     conf = {
         'zk_servers': [],
-        'connections':
+        'connections': connections,
     }
     if hookenv.config()['tenant-config']:
         conf['tenant_config_script'] = True

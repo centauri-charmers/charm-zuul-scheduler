@@ -4,12 +4,15 @@ applications:
     charm: ../../../zuul-scheduler
     num_units: 1
     options:
-      tenant-config: https://github.com/CentauriSolutions/zuul-config/raw/master/zuul/main.yaml
+      tenant-config: https://raw.githubusercontent.com/ChrisMacNaughton/zosci-config/master/main.yaml
       connections: |
-        - name: github
-          driver: github
+        - name: gerrit
+          driver: gerrit
           arguments:
-            app_id: string
+            server: review.opendev.org
+            user: uosci-testing-bot
+            sshkey: /var/lib/zuul/.ssh/id_rsa
+      ssh_key: include-base64://../../../../../../zuul-ssh-key
     # options:
       # tenant-config: https://github.com/openstack/project-config/raw/master/zuul/main.yaml
   zookeeper:

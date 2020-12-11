@@ -6,3 +6,20 @@ options:
       URL to a file that contains a Zuul tenant-config. An example, using
       OpenDev's config, would be:
       https://github.com/openstack/project-config/raw/master/zuul/main.yaml
+  connections:
+    type: string
+    default:
+    description: |
+      Connections are an array of dictionaries in YAML format that configure
+      Zuul connections. An example is:
+      .
+      - name: github
+          driver: github
+          arguments:
+            app_id: string
+  ssh_key:
+    type: string
+    default:
+    description: |
+      An SSH key that will be setup for the Zuul service to use at
+      /var/lib/zuul/.ssh/id_rsa, the default that Zuul expects

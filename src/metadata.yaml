@@ -10,6 +10,7 @@ description: |
 tags:
   - app-server
 series:
+  - focal
   - bionic
 subordinate: false
 provides: {}
