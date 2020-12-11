@@ -52,11 +52,10 @@ class TestRegisteredHooks(test_utils.TestRegisteredHooks):
                     'endpoint.zookeeper.available',
                     'zuul.user.created',),
                 'default_tenant_config': (
-                    'zuul.installed', 'endpoint.zookeeper.available',
-                    'config.changed.tenant-config',),
+                    'zuul.installed', 'endpoint.zookeeper.available',),
                 'configure_tenant_config_script': (
                     'zuul.installed', 'endpoint.zookeeper.available',
-                    'config.changed.tenant-config',),
+                    'config.set.tenant-config',),
                 'wait_for_zookeeper': (
                     'zuul.installed', 'endpoint.zookeeper.joined',),
                 'enable_scheduler': ('zuul.configured', 'zuul.user.created',),
@@ -65,6 +64,9 @@ class TestRegisteredHooks(test_utils.TestRegisteredHooks):
                     'zuul-scheduler.started', 'zuul-web.started',
                     'nginx.configured'),
                 'connect_zookeeper': ('zuul.installed',),
+                'configure_ssh_key': (
+                    'zuul.user.created', 'config.set.ssh_key',),
+                'restart_services': ('service.zuul.restart',),
             }
         }
         # test that the hooks were registered via the

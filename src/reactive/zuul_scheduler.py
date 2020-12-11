@@ -75,11 +75,10 @@ def reset_configured():
                'config.set.ssh_key',)
 def configure_ssh_key():
     key = base64.b64decode(hookenv.config().get('ssh_key', ''))
-    mkdir('/var/lib/zuul/.ssh/',  owner='zuul', group='zuul', perms=0o700)
+    mkdir('/var/lib/zuul/.ssh/', owner='zuul', group='zuul', perms=0o700)
     with open('/var/lib/zuul/.ssh/id_rsa', 'wb') as fh:
         fh.write(key)
     chmod('/var/lib/zuul/.ssh/id_rsa', 0o600)
-
 
 
 @reactive.when('zuul.installed',
