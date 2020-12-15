@@ -22,4 +22,15 @@ options:
     default:
     description: |
       An SSH key that will be setup for the Zuul service to use at
-      /var/lib/zuul/.ssh/id_rsa, the default that Zuul expects
+      /var/lib/zuul/.ssh/id_rsa, the default that Zuul expects. This
+      key will also be configured for nodepool authentication so should
+      be added as a named keypair to your openstack with a name matching
+      your nodepool configuration (defaults to 'nodepool').
+  git_username:
+    type: string
+    default: zuul
+    description: The git username to merge changes as
+  git_email:
+    type: string
+    default: zuul@example.com
+    description: The git email to merge changes as

@@ -1,4 +1,4 @@
-series: bionic
+series: focal
 applications:
   zuul-scheduler:
     charm: ../../../zuul-scheduler
@@ -11,6 +11,7 @@ applications:
           arguments:
             server: 10.85.132.250
             user: zuul
+            port: 29418
             sshkey: /var/lib/zuul/.ssh/id_rsa
         - name: github-git
           driver: git
@@ -28,6 +29,7 @@ applications:
   zookeeper:
     # charm: cs:~omnivector/zookeeper
     charm: cs:~chris.macnaughton/zookeeper
+    series: bionic
     num_units: 3
 relations:
   - - zuul-scheduler

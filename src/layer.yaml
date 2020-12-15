@@ -13,6 +13,7 @@ options:
     #   - python3-psycopg2
   apt:
     packages:
+      - bubblewrap
       - libre2-dev
       - python3-pip
       - nginx

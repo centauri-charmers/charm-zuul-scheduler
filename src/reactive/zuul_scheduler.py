@@ -7,7 +7,7 @@ import charms.reactive as reactive
 import charms.reactive.relations as relations
 
 import charmhelpers.core as ch_core
-from charmhelpers.core.host import (mkdir, chmod)
+import charmhelpers.core.host as ch_host
 import charmhelpers.core.templating as templating
 import charmhelpers.core.hookenv as hookenv
 # from charmhelpers.core.hookenv import log
@@ -75,10 +75,10 @@ def reset_configured():
                'config.set.ssh_key',)
 def configure_ssh_key():
     key = base64.b64decode(hookenv.config().get('ssh_key', ''))
-    mkdir('/var/lib/zuul/.ssh/', owner='zuul', group='zuul', perms=0o700)
-    with open('/var/lib/zuul/.ssh/id_rsa', 'wb') as fh:
-        fh.write(key)
-    chmod('/var/lib/zuul/.ssh/id_rsa', 0o600)
+    ch_host.mkdir('/var/lib/zuul/.ssh/', owner='zuul',
+                  group='zuul', perms=0o700)
+    ch_host.write_file('/var/lib/zuul/.ssh/id_rsa', content=key, owner='zuul',
+                       group='zuul', perms=0o600)
 
 
 @reactive.when('zuul.installed',
@@ -97,6 +97,8 @@ def configure():
     conf = {
         'zk_servers': [],
         'connections': connections,
+        'git_username': hookenv.config().get('git_username'),
+        'git_email': hookenv.config().get('git_email'),
     }
     if hookenv.config()['tenant-config']:
         conf['tenant_config_script'] = True
@@ -113,6 +115,7 @@ def configure():
 @reactive.when('service.zuul.restart')
 def restart_services():
     ch_core.host.service_restart('zuul-scheduler')
+    ch_core.host.service_restart('zuul-executor')
     ch_core.host.service_restart('zuul-web')
     reactive.clear_flag('service.zuul.restart')
 
@@ -148,8 +151,19 @@ def enable_web():
     hookenv.open_port(80)
 
 
+@reactive.when('zuul.configured', 'zuul.user.created')
+@reactive.when_not('zuul-executor.started')
+def enable_executor():
+    templating.render(
+        'zuul-executor.service', '/etc/systemd/system/zuul-executor.service',
+        context={})
+    ch_core.host.service_resume('zuul-executor')
+    reactive.set_flag('zuul-executor.started')
+
+
 @reactive.when('zuul-scheduler.started',
                'zuul-web.started',
+               'zuul-executor.started',
                'nginx.configured')
 def set_ready():
     hookenv.status_set('active', 'Zuul is ready')
