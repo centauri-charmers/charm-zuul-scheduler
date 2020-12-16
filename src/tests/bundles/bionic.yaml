@@ -24,7 +24,7 @@ applications:
     # options:
       # tenant-config: https://github.com/openstack/project-config/raw/master/zuul/main.yaml
   nodepool:
-    charm: ~/centauri-charmers/nodepool
+    charm: cs:~centauri-charmers/nodepool
   zookeeper:
     # charm: cs:~omnivector/zookeeper
     charm: cs:~chris.macnaughton/zookeeper

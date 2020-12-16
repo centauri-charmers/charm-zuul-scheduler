@@ -38,7 +38,6 @@ class TestRegisteredHooks(test_utils.TestRegisteredHooks):
                 'enable_web': ('zuul-web.started',),
                 'enable_executor': ('zuul-executor.started',),
                 'connect_zookeeper': ('endpoint.zookeeper.joined',),
-                'default_tenant_config': ('config.set.tenant-config',),
                 'configure_tenant_config_script': (
                     'config.set.tenant-config',),
                 'add_zuul_user': ('zuul.user.created',),
@@ -51,9 +50,11 @@ class TestRegisteredHooks(test_utils.TestRegisteredHooks):
                 'configure': (
                     'zuul.installed',
                     'endpoint.zookeeper.available',
-                    'zuul.user.created',),
-                'default_tenant_config': (
-                    'zuul.installed', 'endpoint.zookeeper.available',),
+                    'zuul.user.created'),
+                'template_tenant_config': (
+                    'zuul.user.created',
+                    'zuul.installed',
+                    'config.changed.zuul-config',),
                 'configure_tenant_config_script': (
                     'zuul.installed', 'endpoint.zookeeper.available',
                     'config.set.tenant-config',),

@@ -4,6 +4,7 @@ import subprocess
 import yaml
 
 import charms.reactive as reactive
+# import reactive.helpers
 import charms.reactive.relations as relations
 
 import charmhelpers.core as ch_core
@@ -33,13 +34,18 @@ def wait_for_zookeeper():
 
 
 @reactive.when(
-    'zuul.installed', 'endpoint.zookeeper.available')
-@reactive.when_not('config.set.tenant-config')
-def default_tenant_config():
+    'zuul.user.created',
+    'zuul.installed',
+    'config.changed.zuul-config')
+def template_tenant_config():
+    conf = {
+        'config': hookenv.config().get('zuul-config')
+    }
     templating.render(
         'main.yaml', '/etc/zuul/main.yaml',
-        context={}, perms=0o650, group='zuul', owner='zuul')
-    reactive.clear_flag('zuul.configured')
+        context=conf, perms=0o650, group='zuul', owner='zuul')
+    if reactive.helpers.any_file_changed(['/etc/zuul/main.yaml']):
+        reactive.clear_flag('zuul.configured')
 
 
 @reactive.when(
@@ -66,7 +72,8 @@ def configure_nginx():
     reactive.set_flag('nginx.configured')
 
 
-@reactive.when_any('config.changed.connections')
+@reactive.when_any('config.changed.connections',
+                   'endpoint.zookeeper.changed')
 def reset_configured():
     reactive.clear_flag('zuul.configured')
 
@@ -108,8 +115,9 @@ def configure():
     templating.render(
         'zuul.conf', '/etc/zuul/zuul.conf',
         context=conf, perms=0o650, group='zuul', owner='zuul')
-    reactive.set_flag('service.zuul.restart')
-    reactive.set_flag('zuul.configured')
+    if reactive.helpers.any_file_changed(['/etc/zuul/zuul.conf']):
+        reactive.set_flag('service.zuul.restart')
+        reactive.set_flag('zuul.configured')
 
 
 @reactive.when('service.zuul.restart')

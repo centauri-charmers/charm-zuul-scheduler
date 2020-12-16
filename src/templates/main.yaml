@@ -1,2 +1,1 @@
-- tenant:
-    name: example-tenant
+{{ config }}
