@@ -45,7 +45,7 @@ def template_tenant_config():
         'main.yaml', '/etc/zuul/main.yaml',
         context=conf, perms=0o650, group='zuul', owner='zuul')
     if reactive.helpers.any_file_changed(['/etc/zuul/main.yaml']):
-        reactive.clear_flag('zuul.configured')
+        subprocess.check_call(['zuul-scheduler', 'full-reconfigure'])
 
 
 @reactive.when(
