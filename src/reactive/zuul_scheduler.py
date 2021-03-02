@@ -45,7 +45,7 @@ def template_tenant_config():
         'main.yaml', '/etc/zuul/main.yaml',
         context=conf, perms=0o650, group='zuul', owner='zuul')
     if reactive.helpers.any_file_changed(['/etc/zuul/main.yaml']):
-        subprocess.check_call(['zuul-scheduler', 'full-reconfigure'])
+        reactive.set_flag('zuul.reload_config')
 
 
 @reactive.when(
@@ -117,15 +117,24 @@ def configure():
         context=conf, perms=0o650, group='zuul', owner='zuul')
     if reactive.helpers.any_file_changed(['/etc/zuul/zuul.conf']):
         reactive.set_flag('service.zuul.restart')
+        reactive.set_flag('zuul.reload_config')
         reactive.set_flag('zuul.configured')
 
 
 @reactive.when('service.zuul.restart')
 def restart_services():
-    ch_core.host.service_restart('zuul-scheduler')
     ch_core.host.service_restart('zuul-executor')
     ch_core.host.service_restart('zuul-web')
     reactive.clear_flag('service.zuul.restart')
+
+@reactive.when('zuul.reload_config')
+def reload_config():
+    # we don't want to restart the zuul-scheduler process unless absolutely necessary.
+    # That means that we want to "resume" (enable and start) the scheduler process
+    # and then call it's full-reconfigure call. This ensures that the process is
+    # running and that it's configuration has been reloaded.
+    ch_core.host.service_resume('zuul-scheduler')
+    subprocess.check_call(['zuul-scheduler', 'full-reconfigure'])
 
 
 @reactive.when_not('zuul.user.created')
