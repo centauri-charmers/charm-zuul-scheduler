@@ -59,3 +59,11 @@ options:
     type: string
     default: zuul@example.com
     description: The git email to merge changes as
+  executor_disk_limit:
+    type: string
+    default: '-1'
+    description: |
+      This integer is the maximum number of megabytes that any one
+      job is allowed to consume on disk while it is running. If a
+      job’s scratch space has more than this much space consumed, it
+      will be aborted. Set to -1 to disable the limit.

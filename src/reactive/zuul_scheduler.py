@@ -106,6 +106,7 @@ def configure():
         'connections': connections,
         'git_username': hookenv.config().get('git_username'),
         'git_email': hookenv.config().get('git_email'),
+        'executor_disk_limit': hookenv.config().get('executor_disk_limit', '-1')
     }
     if hookenv.config()['tenant-config']:
         conf['tenant_config_script'] = True
