@@ -138,9 +138,9 @@ def reload_config():
     # scheduler process and then call it's full-reconfigure call. This
     # ensures that the process is running and that it's configuration has
     # been reloaded.
-    if ch_core.host.service_running('zuul-scheduler'):
+    try:
         subprocess.check_call(['zuul-scheduler', 'full-reconfigure'])
-    else:
+    except subprocess.CalledProcessError:
         ch_core.host.service_restart('zuul-scheduler')
 
 
