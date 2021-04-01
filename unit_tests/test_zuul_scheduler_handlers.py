@@ -70,6 +70,8 @@ class TestRegisteredHooks(test_utils.TestRegisteredHooks):
                 'configure_ssh_key': (
                     'zuul.user.created', 'config.set.ssh_key',),
                 'restart_services': ('service.zuul.restart',),
+                'reload_config': (
+                    'zuul.reload_config', 'zuul-scheduler.started',),
             }
         }
         # test that the hooks were registered via the

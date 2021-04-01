@@ -106,7 +106,8 @@ def configure():
         'connections': connections,
         'git_username': hookenv.config().get('git_username'),
         'git_email': hookenv.config().get('git_email'),
-        'executor_disk_limit': hookenv.config().get('executor_disk_limit', '-1')
+        'executor_disk_limit': hookenv.config().get(
+            'executor_disk_limit', '-1')
     }
     if hookenv.config()['tenant-config']:
         conf['tenant_config_script'] = True
@@ -128,14 +129,16 @@ def restart_services():
     ch_core.host.service_restart('zuul-web')
     reactive.clear_flag('service.zuul.restart')
 
+
 @reactive.when('zuul.reload_config',
                'zuul-scheduler.started')
 def reload_config():
-    # we don't want to restart the zuul-scheduler process unless absolutely necessary.
-    # That means that we want to "resume" (enable and start) the scheduler process
-    # and then call it's full-reconfigure call. This ensures that the process is
-    # running and that it's configuration has been reloaded.
-    if ch_core.host.service('status', 'zuul-scheduler')
+    # we don't want to restart the zuul-scheduler process unless absolutely
+    # necessary. That means that we want to "resume" (enable and start) the
+    # scheduler process and then call it's full-reconfigure call. This
+    # ensures that the process is running and that it's configuration has
+    # been reloaded.
+    if ch_core.host.service('status', 'zuul-scheduler'):
         subprocess.check_call(['zuul-scheduler', 'full-reconfigure'])
     else:
         ch_core.host.service_restart('zuul-scheduler')
