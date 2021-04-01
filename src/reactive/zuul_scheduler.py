@@ -128,14 +128,17 @@ def restart_services():
     ch_core.host.service_restart('zuul-web')
     reactive.clear_flag('service.zuul.restart')
 
-@reactive.when('zuul.reload_config')
+@reactive.when('zuul.reload_config',
+               'zuul-scheduler.started')
 def reload_config():
     # we don't want to restart the zuul-scheduler process unless absolutely necessary.
     # That means that we want to "resume" (enable and start) the scheduler process
     # and then call it's full-reconfigure call. This ensures that the process is
     # running and that it's configuration has been reloaded.
-    ch_core.host.service_resume('zuul-scheduler')
-    subprocess.check_call(['zuul-scheduler', 'full-reconfigure'])
+    if ch_core.host.service('status', 'zuul-scheduler')
+        subprocess.check_call(['zuul-scheduler', 'full-reconfigure'])
+    else:
+        ch_core.host.service_restart('zuul-scheduler')
 
 
 @reactive.when_not('zuul.user.created')
