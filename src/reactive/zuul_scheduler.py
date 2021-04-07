@@ -17,7 +17,7 @@ import charmhelpers.core.hookenv as hookenv
 @reactive.when('apt.installed.libre2-dev', 'apt.installed.python3-pip')
 @reactive.when_not('zuul.installed')
 def install_zuul():
-    subprocess.check_call(['/usr/bin/pip3', 'install', 'zuul'])
+    subprocess.check_call(['/usr/bin/pip3', 'install', 'zuul<4'])
     reactive.set_flag('zuul.installed')
 
 
