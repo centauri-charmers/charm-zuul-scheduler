@@ -17,5 +17,5 @@ provides: {}
 requires:
   zookeeper:
     interface: zookeeper
-  mysql_connection:
+  shared-db:
     interface: mysql-shared

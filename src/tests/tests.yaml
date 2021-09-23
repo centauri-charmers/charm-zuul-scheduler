@@ -10,9 +10,7 @@ smoke_bundles:
 - focal
 target_deploy_status:
   zookeeper:
-    workload_status_message: 
-      - Zookeeper client data sent
-      - 3 nodes
+    workload_status_message: Zookeeper client data sent
   zuul-scheduler:
     workload_status_message: Zuul is ready
 tests: []

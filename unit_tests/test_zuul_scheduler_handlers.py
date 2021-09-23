@@ -34,6 +34,8 @@ class TestRegisteredHooks(test_utils.TestRegisteredHooks):
                 'configure': ('zuul.configured',),
                 'wait_for_zookeeper': ('endpoint.zookeeper.available',),
                 'install_zuul': ('zuul.installed',),
+                'wait_for_db': ('shared-db.connected',),
+                'setup_database': ('shared-db.available',),
                 'enable_scheduler': ('zuul-scheduler.started',),
                 'enable_web': ('zuul-web.started',),
                 'enable_executor': ('zuul-executor.started',),
@@ -50,7 +52,8 @@ class TestRegisteredHooks(test_utils.TestRegisteredHooks):
                 'configure': (
                     'zuul.installed',
                     'endpoint.zookeeper.available',
-                    'zuul.user.created'),
+                    'shared-db.available',
+                    'zuul.user.created',),
                 'template_tenant_config': (
                     'zuul.user.created',
                     'zuul.installed',
@@ -60,6 +63,8 @@ class TestRegisteredHooks(test_utils.TestRegisteredHooks):
                     'config.set.tenant-config',),
                 'wait_for_zookeeper': (
                     'zuul.installed', 'endpoint.zookeeper.joined',),
+                'wait_for_db': ('endpoint.zookeeper.available',),
+                'setup_database': ('shared-db.connected',),
                 'enable_scheduler': ('zuul.configured', 'zuul.user.created',),
                 'enable_web': ('zuul.configured', 'zuul.user.created',),
                 'enable_executor': ('zuul.configured', 'zuul.user.created',),

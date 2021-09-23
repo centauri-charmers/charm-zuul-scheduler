@@ -1,7 +1,7 @@
 series: focal
 applications:
   zuul-scheduler:
-    charm: ../../../zuul-scheduler
+    charm: ../../.
     num_units: 1
     options:
       tenant-config: https://raw.githubusercontent.com/ChrisMacNaughton/zosci-config/master/main.yaml
@@ -9,10 +9,10 @@ applications:
         - name: gerrit
           driver: gerrit
           arguments:
-            server: 10.85.132.250
+            server: 10.85.132.77
             user: zuul
             port: 29418
-            sshkey: /var/lib/zuul/.ssh/id_rsa
+            # sshkey: /var/lib/zuul/.ssh/id_rsa
         - name: github-git
           driver: git
           arguments:
@@ -21,7 +21,7 @@ applications:
           driver: git
           arguments:
             baseurl: https://opendev.org/
-      ssh_key: include-base64:///home/chris/code/centauri/charms/zuul
+      ssh_key: include-base64:///home/ubuntu/zuul
     # options:
       # tenant-config: https://github.com/openstack/project-config/raw/master/zuul/main.yaml
   nodepool:
@@ -31,8 +31,17 @@ applications:
     charm: cs:~chris.macnaughton/zookeeper
     series: bionic
     num_units: 3
+  mysql-innodb-cluster:
+    charm: cs:~openstack-charmers-next/mysql-innodb-cluster
+    num_units: 3
+  mysql-router:
+    charm: cs:~openstack-charmers-next/mysql-router
 relations:
   - - zuul-scheduler
     - zookeeper
   - - nodepool
     - zookeeper
+  - - mysql-innodb-cluster
+    - mysql-router
+  - - zuul-scheduler
+    - mysql-router

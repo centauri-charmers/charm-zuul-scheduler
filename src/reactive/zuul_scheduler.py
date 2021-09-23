@@ -33,6 +33,19 @@ def wait_for_zookeeper():
     hookenv.status_set('waiting', 'Waiting for Zookeeper to become available')
 
 
+@reactive.when('endpoint.zookeeper.available')
+@reactive.when_not('shared-db.connected')
+def wait_for_db():
+    hookenv.status_set('blocked', 'Relate database to continue')
+
+
+@reactive.when('shared-db.connected')
+@reactive.when_not('shared-db.available')
+def setup_database(database):
+    database.configure('zuul', 'zuul')
+    hookenv.status_set('waiting', 'Waiting for database to become available')
+
+
 @reactive.when(
     'zuul.user.created',
     'zuul.installed',
@@ -73,7 +86,7 @@ def configure_nginx():
 
 
 @reactive.when_any('config.changed.connections',
-                   'endpoint.zookeeper.changed')
+                   'endpoint.zookeeper.changed',)
 def reset_configured():
     reactive.clear_flag('zuul.configured')
 
@@ -90,6 +103,7 @@ def configure_ssh_key():
 
 @reactive.when('zuul.installed',
                'endpoint.zookeeper.available',
+               'shared-db.available',
                'zuul.user.created')
 @reactive.when_not('zuul.configured')
 def configure():
@@ -101,13 +115,16 @@ def configure():
             connections = yaml.safe_load(connections_yaml)
     except yaml.YAMLError:
         pass
+    mysql = relations.endpoint_from_flag('shared-db.available')
     conf = {
         'zk_servers': [],
         'connections': connections,
+        'database': mysql,
         'git_username': hookenv.config().get('git_username'),
         'git_email': hookenv.config().get('git_email'),
         'executor_disk_limit': hookenv.config().get(
-            'executor_disk_limit', '-1')
+            'executor_disk_limit', '-1'),
+        'public_ip': hookenv.unit_public_ip(),
     }
     if hookenv.config()['tenant-config']:
         conf['tenant_config_script'] = True

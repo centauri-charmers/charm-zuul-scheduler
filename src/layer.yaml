@@ -2,7 +2,7 @@ includes:
   - layer:basic
   - layer:apt
   - interface:zookeeper
-
+  - interface:mysql-shared
 options:
   basic:
     # We're installing a Pip package so we'll hit
@@ -16,4 +16,5 @@ options:
       - bubblewrap
       - libre2-dev
       - python3-pip
+      - python3-pymysql
       - nginx

@@ -7,7 +7,7 @@ Type=simple
 Group=zuul
 User=zuul
 RuntimeDirectory=zuul
-ExecStart=/usr/local/bin/zuul-executor -d
+ExecStart=/usr/local/bin/zuul-executor -f
 ExecStop=/usr/local/bin/zuul-executor stop
 
 [Install]
