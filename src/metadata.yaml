@@ -13,7 +13,11 @@ series:
   - focal
   - bionic
 subordinate: false
-provides: {}
+provides:
+  gearman:
+    interface: gearman
+  prometheus:
+    interface: prometheus
 requires:
   zookeeper:
     interface: zookeeper

@@ -1,8 +1,10 @@
 includes:
   - layer:basic
   - layer:apt
+  - layer:snap
   - interface:zookeeper
   - interface:mysql-shared
+  - interface:prometheus
 options:
   basic:
     # We're installing a Pip package so we'll hit
@@ -18,3 +20,6 @@ options:
       - python3-pip
       - python3-pymysql
       - nginx
+  snap:
+    icey-prometheus-statsd-exporter:
+      channel: stable

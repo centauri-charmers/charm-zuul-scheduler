@@ -21,7 +21,7 @@ applications:
           driver: git
           arguments:
             baseurl: https://opendev.org/
-      ssh_key: include-base64:///home/ubuntu/zuul
+      # ssh_key: include-base64:///home/ubuntu/zuul
     # options:
       # tenant-config: https://github.com/openstack/project-config/raw/master/zuul/main.yaml
   nodepool:
