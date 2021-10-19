@@ -36,6 +36,9 @@ applications:
     num_units: 3
   mysql-router:
     charm: cs:~openstack-charmers-next/mysql-router
+  prometheus:
+    charm: cs:prometheus2
+    num_units: 1
 relations:
   - - zuul-scheduler
     - zookeeper
@@ -45,3 +48,5 @@ relations:
     - mysql-router
   - - zuul-scheduler
     - mysql-router
+  - - zuul-scheduler
+    - prometheus
