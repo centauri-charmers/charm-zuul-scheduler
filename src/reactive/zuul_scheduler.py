@@ -159,6 +159,7 @@ def reload_config():
         subprocess.check_call(['zuul-scheduler', 'full-reconfigure'])
     except subprocess.CalledProcessError:
         ch_core.host.service_restart('zuul-scheduler')
+    reactive.clear_flag('zuul.reload_config')
 
 
 @reactive.when_not('zuul.user.created')
